@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:ng="http://angularjs.org">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="Salis Muhammad">
+	<title>MEAN TODO</title>
+
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="css/mean.css">
+
+	<!-- Custom Fonts -->
+	<link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+
+</head>
+<body ng-app="todomeanapp">
+	<section ng-view class="main-section"></section>
+
+	<script type="text/javascript">
+		window.user = <%- user || 'null' %>;
+	</script>
+
+	<!-- CSS Dependencies -->
+	<script type="text/javascript" src="/js/jquery/dist/jquery.min.js"></script>
+	<script type="text/javascript" src="/js/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/js/mean.js"></script>
+
+	<!-- Angular Dependencies -->
+	<script type="text/javascript" src="/js/angular/angular.js"></script>
+	<script type="text/javascript" src="/js/angular-route/angular-route.min.js"></script>
+	<script type="text/javascript" src="/js/angular-resource/angular-resource.min.js"></script>
+
+	<!-- Users Module -->
+	<script type="text/javascript" src="/modules/users/users.client.module.js"></script>
+	<script type="text/javascript" src="/modules/users/services/users.client.service.js"></script>
+
+	<!-- Todos Module -->
+	<script type="text/javascript" src="/modules/todos/todos.client.module.js"></script>
+	<script type="text/javascript" src="/modules/todos/services/todos.client.service.js"></script>
+	<script type="text/javascript" src="/modules/todos/controllers/todos.client.controller.js"></script>
+	<script type="text/javascript" src="/modules/todos/config/todos.client.routes.js"></script>
+
+
+	<!-- Example Module -->
+	<script type="text/javascript" src="/modules/example/example.client.module.js"></script>
+	<script type="text/javascript" src="/modules/example/controllers/example.client.controller.js"></script>
+	<script type="text/javascript" src="/modules/example/config/example.client.routes.js"></script>
+
+	<!-- Load All Angular Application -->
+	<script type="text/javascript" src="/application.js"></script>
+</body>
+</html>

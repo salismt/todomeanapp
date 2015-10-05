@@ -1,0 +1,106 @@
+Express -
+
+- Request
+
+req.params:
+	app.get('/user/:id', function(req, res) {
+		res.send('user ' + req.params.id);
+	});
+
+req.body:
+req.query: for query string ('/?.name=Salis')
+
+APP STEPS=
+
+A. (create server and simple web content)
+1. create the server in server.js
+2. add a controller which render in index.server.controller.js
+3. add a route that require the controller and app.get('/', index.render) as a middleware to GET request made to the root path
+4. glue all this together in config/express,js and export it as a module
+5. in server.js just below app.listen(port), put in module.exports = app , to expose the app to the web
+
+node server, then done
+
+B. (set templating engine)
+1. install ejs
+2. type app.set in the config to set the views folder and view engine
+3. create index.ejs and structure the html as you wish
+4. in your controller, replace the res.send with res.render to render it locally and send the HTML as response
+5. if you want to include static files, app.use(express.static) in your config, just before returning the app
+
+C. (connect to mongoDB)
+1. install mongoose
+2. create development.js in env folder and set up your port and db location
+3. create mongoose.js in config to call config.js, mongoose, and export a module contains db = mongoose.connect(config.db)
+4. create config.js and export a module contains development.js as process.env.NODE_ENV
+5. $ export NODE_ENV=development
+6. update server.js to add your new config files and restructure it
+
+D. (Mongoose schemas && CRUD Modules) 
+1. put your schemas in app/models files
+2. require the Schema Model in config/mongoose.js (before return db statement)
+3. create a user
+ a. create a user controller, require the schema from models
+ b. exports.create = function (req, res, next) and user.save
+ c. create users route and export module contains app.route('/users')
+ d. go to config/express.js file and add the require from users routes
+4. install body-parser which provides middlewares to handle request data
+5. update your express.js to include body-parser
+6. find all user
+ a. create exports.list in users controller
+ b. go to your routes, and add .get(users.list)
+7. find one user
+ a. create exports.read & exports.userById in users controller
+ b. modify your user routes to include new app.route(/path).get(users.read); and app.param('userId', userByID)
+8. update the user
+ a. create exports.update in users controller
+ b. modify your user routes to include .put(users.update) in /:userId route
+9. delete the user
+ a. create exports.delete in user controller
+ b. modify your user routes to include .delete(users.delete) in /:userId route
+10. Indexes: index validates the uniqueness of a document field accross a collection
+ a. username to be unique, add to User model
+ b. mongoose support secondary indexes, if you app will use many queries with email field, optimize these queries by creating email _secondary index
+11. Password validation
+Mongoose middleware: mongoose has pre and post middlewares
+ a. before you save something to Mongodb, some action is performed before that, we'll use it later for hashing the password before saving it to MongoDB
+
+E. (Authentication)
+1. install passport, passport-local, passport-facebook, passport-twitter
+2. require the passport in server.js and config/express.js (passport = require('./config/passport)) and app.use initialize&session it before any route definitions
+3. implement authentication strategies
+ a. $npm install passport-local --save
+ b. create folder config/strategies and new file local.js
+ c. require passport, LocalStrategy, User mongoose model
+ d. register the strategy using passport.use() method that uses instance of LocalStrategy object
+ e. inside callback function you use the User model to find a user with the passed username & try to authenticate it
+4. create passport.js in config folder
+ a. add passport.serializeUser() and passport.deserializeUser()
+5. modify your User model to support Passport authentication
+ a. add this in UserSchema
+ - add provider property - the strategy used to register the user
+ - providerId property - the user identifier for the authentication strategy
+ - providerData property - to store the user object retrieved from OAuth providers
+ - todos property - to store TODOs
+ b. hash the password before saving to MongoDB by using UserSchema.pre() and use 'Crypto' module to hash it in md5 and update the password to digest in hex
+ c. add authenticate() method to accepts a string password argument, hash it and compares it to the current user hashed password
+ d. add findUniqueUsername() static method to an available unique username for new users (used later with OAuth authentication)
+
+6. add a login page, create login.ejs in the views folder
+7. create a new register.ejs in the views folder
+(name parameters of the input fields - they correspond to the Mongoose User model fields)
+
+8. Users Controller modifications, replace users.server.controller content with
+ a. setup require User mongoose.model and passport
+ b. create getErrorMessage function
+ c. exports.renderLogin function for rendering login page
+ d. exports.renderRegister function for rendering register page
+ e. exports.register function to use your User model to create new users from HTTP req.body, then tries to save it to MongoDB, if error, call getErrorMessage() to fetch the errors, if success, the session will be created using req.login()
+
+9. Connect-Flash stores temporary messages in a session object, message stored in the flash object will be cleared once they are presented to the user
+ a. npm install connect-flash --save
+ b. then require it express.js and app.use(flash()); as middleware
+ it will exposes the req.flash() method, which allows to create and retrieve flash messsage
+
+10. wire up the routes for login and register
+ a. in users.server.routes add
