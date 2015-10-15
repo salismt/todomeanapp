@@ -6,7 +6,7 @@ module.exports = {
 	facebook: {
 		clientID: '416680535207576',
 		clientSecret: 'b63dea8fe0868b64e9b538dac8899b45',
-		callbackURL: 'http://localhost:' + port + '/oauth/facebook/callback'
+		callbackURL: 'http://localhost:' + port + '/oauth/facebook/callback',
 	},
 	twitter: {
 		clientID: '5JHqE649yCBQFqMJD0ZkOUPoL',
